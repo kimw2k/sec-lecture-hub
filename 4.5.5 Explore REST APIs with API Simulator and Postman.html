@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>REST API 탐색 및 Postman 활용 실습 매뉴얼</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #005073;
+            /* Cisco Blue Style */
+            --secondary: #00bceb;
+            --accent: #ff9900;
+            /* Postman Orange Style */
+            --bg-light: #f8fafc;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+
+            /* VS Code Dark+ 코드 테마 */
+            --code-bg: #1e1e1e;
+            --code-header: #2d2d2d;
+            --code-txt: #d4d4d4;
+            --code-key: #569cd6;
+            --code-func: #dcdcaa;
+            --code-str: #ce9178;
+            --code-num: #b5cea8;
+            --code-cmt: #6a9955;
+            --code-ln: #858585;
+        }
+
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Noto Sans KR", sans-serif;
+            background: #fff;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 헤더 */
+        .header {
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .theme-tag {
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            vertical-align: middle;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        /* 섹션 스타일 */
+        section {
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        .section-header {
+            background: var(--bg-light);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header .icon {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .section-content {
+            padding: 20px;
+        }
+
+        /* 코드 윈도우 UI */
+        .code-window {
+            margin: 15px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .code-header {
+            background: var(--code-header);
+            color: #aaa;
+            padding: 6px 15px;
+            font-size: 11px;
+            font-family: 'Fira Code', monospace;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #222;
+        }
+
+        pre {
+            margin: 0;
+            background: var(--code-bg);
+            color: var(--code-txt);
+            padding: 15px;
+            overflow: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .ln {
+            color: var(--code-ln);
+            padding-right: 15px;
+            user-select: none;
+            border-right: 1px solid #333;
+            margin-right: 10px;
+            display: inline-block;
+            width: 20px;
+            text-align: right;
+        }
+
+        .key {
+            color: var(--code-key);
+            font-weight: bold;
+        }
+
+        .func {
+            color: var(--code-func);
+        }
+
+        .str {
+            color: var(--code-str);
+        }
+
+        .num {
+            color: var(--code-num);
+        }
+
+        .cmt {
+            color: var(--code-cmt);
+            font-style: italic;
+        }
+
+        /* 정보 박스 */
+        .info-box {
+            background: #f0f9ff;
+            border-left: 5px solid var(--secondary);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+        }
+
+        .info-title {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* 테이블 */
+        .req-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .req-table th {
+            background: #f1f5f9;
+            color: var(--primary);
+            padding: 10px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .req-table td {
+            padding: 10px;
+            border: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                /* Legacy */
+            }
+
+            .code-window {
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header class="header">
+            <div class="header-title">
+                <span class="theme-tag">REST API & Postman 실습</span>
+                <h1>Lab 4.5.5: API Simulator 및 Postman을 활용한 REST API 탐색</h1>
+            </div>
+            <div style="text-align:right; font-size:11px; color:#64748b;">
+                환경: DEVASC Virtual Machine [1]<br />
+                강좌: 네트워크 자동화 (API 기초)
+            </div>
+        </header>
+
+        <!-- 학습 목표 섹션 -->
+        <section style="border: 2px solid var(--primary);">
+            <div class="section-header" style="background: #eef2ff;">
+                <div class="icon">GOAL</div>
+                <strong>실습 목표 (Objectives)</strong>
+            </div>
+            <div class="section-content">
+                <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                    <li><b>Part 1:</b> DEVASC VM 실행 및 시스템 준비 [1]</li>
+                    <li><b>Part 2:</b> API Simulator를 통한 OpenAPI(Swagger) 문서 분석 [1]</li>
+                    <li><b>Part 3:</b> Postman 도구를 이용한 API 호출(GET/POST/DELETE) 실습 [1]</li>
+                    <li><b>Part 4:</b> Python 스크립트를 활용한 데이터 대량 입력 자동화 [1]</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 환경 설정 섹션 -->
+        <section>
+            <div class="section-header">
+                <div class="icon">01</div>
+                <strong>Part 1 & 2: 환경 접속 및 API 문서 탐색</strong>
+            </div>
+            <div class="section-content">
+                <p style="font-size: 14px;">실습용 도서관 API(School Library API) 서비스에 접속하여 제공되는 엔드포인트를 확인합니다. [1]</p>
+                <div class="info-box">
+                    <span class="info-title">🔗 접속 정보</span>
+                    • <b>URL:</b> <code>http://library.demo.local</code><br>
+                    • <b>Doc Page:</b> API docs 메뉴 선택 (OpenAPI 기반) [1]
+                </div>
+                <div class="code-window">
+                    <div class="code-header"><span>API Documentation Information</span><span>Swagger / OpenAPI</span>
+                    </div>
+                    <pre><code><span class="cmt"># 주요 API 엔드포인트 구조</span>
+<span class="key">GET</span>    /api/v1/books  - 도서 목록 전체 조회 [1]
+<span class="key">POST</span>   /api/v1/books  - 신규 도서 추가
+<span class="key">DELETE</span> /api/v1/books/{id} - 특정 도서 삭제</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Postman 섹션 -->
+        <section>
+            <div class="section-header" style="border-left: 5px solid var(--accent);">
+                <div class="icon" style="background:var(--accent)">02</div>
+                <strong>Part 3: Postman을 이용한 API 호출 실습</strong>
+            </div>
+            <div class="section-content">
+                <p style="font-size: 14px;">Postman은 API 개발 및 테스트를 위한 필수 도구입니다. 시뮬레이터에 요청을 보내고 응답을 확인합니다. [1]</p>
+
+                <table class="req-table">
+                    <tr>
+                        <th width="20%">Method</th>
+                        <th width="45%">Request URL</th>
+                        <th width="35%">Expected Status</th>
+                    </tr>
+                    <tr>
+                        <td style="color: #0d6efd; font-weight: 800;">GET</td>
+                        <td><code>http://library.demo.local/api/v1/books</code> [1]</td>
+                        <td style="color: #198754; font-weight: 700;">200 OK [1]</td>
+                    </tr>
+                </table>
+
+                <div class="code-window">
+                    <div class="code-header"><span>JSON Response Sample</span><span>application/json</span></div>
+                    <pre><code><span class="ln">1</span>[
+<span class="ln">2</span>  {
+<span class="ln">3</span>    <span class="key">"id"</span>: <span class="num">0</span>,
+<span class="ln">4</span>    <span class="key">"title"</span>: <span class="str">"IP Routing Fundamentals"</span>,
+<span class="ln">5</span>    <span class="key">"author"</span>: <span class="str">"Mark A. Sportack"</span>
+<span class="ln">6</span>  },
+<span class="ln">7</span>  {
+<span class="ln">8</span>    <span class="key">"id"</span>: <span class="num">1</span>,
+<span class="ln">9</span>    <span class="key">"title"</span>: <span class="str">"Python for Dummies"</span>,
+<span class="ln">10</span>    <span class="key">"author"</span>: <span class="str">"Stef Maruch"</span>
+<span class="ln">11</span>  }
+<span class="ln">12</span>]</code></pre>
+                </div>
+
+                <div class="info-box" style="background: #fff7ed; border-color: var(--accent);">
+                    <span class="info-title" style="color: #9a3412;">⚠️ Postman 주의사항</span>
+                    Postman에서 <b>POST</b> 요청 시, <code>Body > raw > JSON</code> 형식을 선택하고 필수 필드(title, author)를 정확히 입력해야
+                    합니다. [1]
+                </div>
+            </div>
+        </section>
+
+        <!-- Python 자동화 섹션 -->
+        <section>
+            <div class="section-header" style="border-left: 5px solid #4ec9b0;">
+                <div class="icon" style="background:#4ec9b0">03</div>
+                <strong>Part 4: Python을 활용한 대량 데이터 생성 자동화</strong>
+            </div>
+            <div class="section-content">
+                <p style="font-size: 14px;">반복적인 API 호출을 스크립트로 자동화하여 도서 100권을 일괄 등록합니다. [1]</p>
+                <div class="code-window">
+                    <div class="code-header"><span>add_books.py</span><span style="color:#4ec9b0">python</span></div>
+                    <pre><code><span class="ln">1</span><span class="key">import</span> requests
+<span class="ln">2</span>
+<span class="ln">3</span>url = <span class="str">"http://library.demo.local/api/v1/books"</span>
+<span class="ln">4</span>
+<span class="ln">5</span><span class="key">for</span> i <span class="key">in</span> <span class="func">range</span>(<span class="num">1</span>, <span class="num">101</span>):
+<span class="ln">6</span>    payload = {<span class="str">"title"</span>: f<span class="str">"Book {i}"</span>, <span class="str">"author"</span>: <span class="str">"AI Bot"</span>}
+<span class="ln">7</span>    response = requests.<span class="func">post</span>(url, json=payload)
+<span class="ln">8</span>    <span class="func">print</span>(f<span class="str">"Added {i}: {response.status_code}"</span>) </code></pre>
+                </div>
+            </div>
+        </section>
+
+        <footer
+            style="text-align:center; font-size:11px; color:#94a3b8; margin-top:30px; border-top: 1px solid #eee; padding-top: 10px;">
+            본 문서는 Cisco DEVASC 실습 가이드를 기반으로 재구성되었습니다.<br />
+            <b>Tip:</b> 인쇄 시 설정에서 '배경 그래픽 항목'을 체크해야 모든 컬러가 정상 출력됩니다.
+        </footer>
+    </div>
+
+</body>
+
+</html>

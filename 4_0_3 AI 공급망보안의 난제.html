@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 코딩의 역설: 속도의 시대, 보안의 역습</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
+    <style>
+        :root {
+            --accent-yellow: #f1f500;
+            --accent-green: #00ff88;
+            --accent-cyan: #00e5ff;
+            --warning-red: #ff3333;
+            --bg-black: #000000;
+        }
+
+        .reveal {
+            background-color: var(--bg-black);
+        }
+
+        .reveal .slides {
+            text-align: left;
+        }
+
+        .reveal h1 {
+            font-size: 46px !important;
+            color: var(--accent-yellow);
+            font-weight: 800;
+            text-transform: none;
+            margin-bottom: 30px;
+            word-break: keep-all;
+        }
+
+        .reveal h2 {
+            font-size: 38px !important;
+            color: var(--accent-green);
+            border-left: 12px solid var(--accent-green);
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+
+        .reveal p,
+        .reveal li {
+            font-size: 30px !important;
+            color: #ffffff;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            word-break: keep-all;
+        }
+
+        .highlight {
+            color: var(--accent-yellow);
+            font-weight: bold;
+        }
+
+        .warning {
+            color: var(--warning-red);
+            font-weight: bold;
+        }
+
+        .box {
+            background: #111;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background: var(--accent-cyan);
+            color: black !important;
+            padding: 10px;
+            font-size: 26px !important;
+        }
+
+        td {
+            border-bottom: 1px solid #444;
+            padding: 15px;
+            font-size: 24px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1. 타이틀: 위기와 기회 -->
+            <section data-background-color="#000000">
+                <div style="text-align: center;">
+                    <p class="highlight" style="letter-spacing: 5px;">AX(AI TRANSFORMATION) SECURITY</p>
+                    <h1>AI가 쏟아내는 코드,<br><span class="warning">보안 취약점도 쏟아진다.</span></h1>
+                    <p style="margin-top: 50px; color: #888;">실시간 보안 어시스턴트(MCP)를 통한 대응 전략</p>
+                </div>
+            </section>
+
+            <!-- 2. 기사의 핵심 문제 제기: AI 코딩의 역설 -->
+            <section data-background-color="#000000">
+                <h2>01. 속도의 대가: 보안 부채</h2>
+                <div class="box" style="border-color: var(--warning-red);">
+                    <ul>
+                        <li><span class="highlight">현황:</span> AI 코딩 에이전트 도입으로 개발 속도 수십 배 증가</li>
+                        <li><span class="warning">위기:</span> 검증되지 않은 소스코드와 오픈소스가 무분별하게 유입</li>
+                        <li><span class="warning">리스크:</span> 보안 내재화(Security by Design) 없는 코드의 양산</li>
+                    </ul>
+                </div>
+                <p style="font-size: 24px !important; margin-top: 20px;">📌 AI는 '동작하는 코드'를 짜지만, <span
+                        class="warning">'안전한 코드'</span>를 보장하지 않습니다.</p>
+            </section>
+
+            <!-- 3. 기술적 대응: Sparrow MCP의 역할 -->
+            <section data-background-color="#000000">
+                <h2>02. 실시간 점검 체계 (MCP)</h2>
+                <p>기사의 핵심 솔루션: <span class="accent-cyan">Sparrow MCP (Modern Code Protection)</span></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>기능</th>
+                            <th>상세 내용 (학생 필수 인지)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="highlight">즉시 분석</span></td>
+                            <td>코드 생성·수정 시 즉각적인 소스코드 점검</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">공급망 추적</span></td>
+                            <td>사용된 오픈소스의 취약점 및 라이선스 식별</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">비관론적 가시화</span></td>
+                            <td>생성된 모든 결과물에 대한 SBOM 자동 업데이트</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 4. 도식화: AI 코딩 보안 워크플로우 -->
+            <section data-background-color="#000000">
+                <h2>03. AI 기반 개발의 New Standard</h2>
+                <div class="mermaid">
+                    graph TD
+                    A[AI Coding Agent] -- 코드 생성 --> B{Sparrow MCP}
+                    B -- 취약점 발견 --> C[즉시 수정 제안]
+                    B -- 정상 판정 --> D[보안 인가 완료 코드]
+                    C -- 피드백 루프 --> A
+                    B -- 구성 요소 기록 --> E[SBOM 관리 서버]
+                    style B fill:#f1f500,color:#000
+                    style E fill:#00e5ff,color:#000
+                    style D fill:#00ff88,color:#000
+                </div>
+            </section>
+
+            <!-- 5. 학생들을 위한 결론: 미래 방향성 -->
+            <section data-background-color="#000000">
+                <h2>04. 시큐어코딩 학습자의 자세</h2>
+                <div class="box">
+                    <ul>
+                        <li>AI의 결과물을 <span class="warning">맹신하지 않는 '제로 트러스트'</span> 마인드</li>
+                        <li>자동화 도구(MCP, SCA)가 주는 <span class="highlight">알람의 기술적 맥락</span>을 이해할 것</li>
+                        <li>코드 작성을 넘어 <span class="highlight">보안 리뷰어(Auditor)</span>로서의 역량 강화</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 30px; font-size: 28px !important;">🚀 <b>AI 시대의 경쟁력:</b> "빨리 짜는 능력"이 아니라 <br>"안전하게
+                    걸러내는 능력"이 당신의 몸값을 결정합니다.</p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            center: true,
+            hash: true,
+            width: 1200,
+            height: 800,
+            transition: 'slide'
+        });
+    </script>
+</body>
+
+</html>

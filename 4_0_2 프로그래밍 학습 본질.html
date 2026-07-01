@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Dive: 프로그래밍 언어 학습의 본질적 가치</title>
+    <!-- Reveal.js Core & Theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
+    <style>
+        :root {
+            --accent-yellow: #f1f500;
+            --accent-green: #00ff88;
+            --accent-blue: #00e5ff;
+            --bg-black: #000000;
+        }
+
+        .reveal {
+            background-color: var(--bg-black);
+        }
+
+        .reveal .slides {
+            text-align: left;
+        }
+
+        /* Typography */
+        .reveal h1 {
+            font-size: 44px !important;
+            color: var(--accent-yellow);
+            font-weight: 800;
+            text-transform: none;
+            margin-bottom: 30px;
+            word-break: keep-all;
+        }
+
+        .reveal h2 {
+            font-size: 38px !important;
+            color: var(--accent-green);
+            border-left: 12px solid var(--accent-green);
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+
+        .reveal p,
+        .reveal li {
+            font-size: 32px !important;
+            color: #ffffff;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            word-break: keep-all;
+        }
+
+        /* Custom Components */
+        .highlight {
+            color: var(--accent-yellow);
+            font-weight: bold;
+        }
+
+        .critical {
+            color: #ff4d4d;
+            font-weight: bold;
+        }
+
+        .box {
+            background: #111;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            margin-top: 15px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 12px;
+            background: var(--accent-blue);
+            color: black;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1. 타이틀 슬라이드 -->
+            <section data-background-color="#000000">
+                <div style="text-align: center;">
+                    <p class="highlight" style="letter-spacing: 5px;">PHILOSOPHY OF ENGINEERING</p>
+                    <h1>AI 코딩 시대,<br><span style="color:white">프로그래밍 언어 학습은</span><br>여전히 유효한가?</h1>
+                    <p style="margin-top: 50px; color: #888;">지식의 '보유'에서 '비판적 검증'으로의 패러다임 전환</p>
+                </div>
+            </section>
+
+            <!-- 2. 첫 번째 통찰: 언어는 사고의 도구 -->
+            <section data-background-color="#000000">
+                <h2>01. 언어는 지식이 아닌 <span class="highlight">사고 모델</span>이다</h2>
+                <div class="box">
+                    <ul>
+                        <li>언어를 배우는 것은 단순 타이핑 기술이 아닌, <span class="highlight">현상을 구조화하는 방식</span>을 배우는 과정</li>
+                        <li>컴퓨터가 문제를 해결하는 논리 구조(Algorithms, State, Logic)를 이해하지 못하면 AI에게 올바른 질문을 던질 수 없음</li>
+                        <li><b>핵심:</b> "AI는 당신의 의도를 구체화할 뿐, 의도 자체를 만들어내지 못한다."</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 3. 두 번째 통찰: 검증 권력 (Verification Power) -->
+            <section data-background-color="#000000">
+                <h2>02. <span class="critical">검증할 수 없는 지식</span>은 위험하다</h2>
+                <div class="box">
+                    <p>AI는 확률적으로 '그럴듯한' 답변을 생성함 (Hallucination 리스크)</p>
+                    <hr style="border-color: #444;">
+                    <ul>
+                        <li>소스코드 보안 취약점, 비즈니스 로직의 결함은 눈에 보이지 않음</li>
+                        <li>언어를 모르는 개발자는 AI가 만든 <span class="critical">'아름다운 쓰레기'</span>를 구분할 능력이 없음</li>
+                        <li><b>결론:</b> 언어 학습의 목적은 <span class="highlight">"AI의 답변을 심판할 자격"</span>을 얻는 것</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 4. 세 번째 통찰: 추상화 계층의 이해 -->
+            <section data-background-color="#000000">
+                <h2>03. 추상화의 함정에서 탈출하기</h2>
+                <div class="card-grid">
+                    <div class="box">
+                        <span class="tag">Low Leve Insight</span>
+                        <p style="font-size: 24px !important;">메모리 관리, 데이터 타입, 성능 최적화의 원리 이해</p>
+                    </div>
+                    <div class="box">
+                        <span class="tag">High Level Flow</span>
+                        <p style="font-size: 24px !important;">전체 시스템 아키텍처와 컴포넌트 간 상호작용 설계</p>
+                    </div>
+                </div>
+                <p style="margin-top: 25px;">AI가 처리하는 것은 상위 계층의 '구현'일 뿐, 하위 계층에서 발생하는 <span
+                        class="highlight">병목(Bottleneck)</span>과 <span class="highlight">보안 구멍</span>은 언어적 이해 없이는 보이지
+                    않습니다.</p>
+            </section>
+
+            <!-- 5. 네 번째 통찰: AI와의 협업(Prompt Engineering) -->
+            <section data-background-color="#000000">
+                <h2>04. <span class="highlight">Prompting</span>은 프로그래밍의 연장선</h2>
+                <div class="box">
+                    <ul>
+                        <li>좋은 프롬프트는 <span class="highlight">구조적 사고</span>에서 나옴</li>
+                        <li>객체 지향, 함수형 프로그래밍의 개념을 아는 사람은 AI에게 명확한 '제약 조건'과 '인터페이스'를 정의해 줄 수 있음</li>
+                        <li>언어는 AI라는 강력한 '주니어 개발자'에게 업무를 지시하는 <span class="highlight">매니징 언어</span>가 됨</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 6. 결론: Professionalism -->
+            <section data-background-color="#000000" style="text-align: center;">
+                <h2>The Final Message</h2>
+                <div
+                    style="background: var(--accent-yellow); color: black; padding: 40px; border-radius: 20px; font-weight: 800; font-size: 38px;">
+                    "AI가 코드를 짤 수는 있어도,<br>그 코드에 대한 <span
+                        style="background: black; color: white; padding: 0 10px;">책임</span>은 질 수 없습니다."
+                </div>
+                <div class="box" style="text-align: left; margin-top: 40px;">
+                    <p>전문가는 <span class="highlight">책임지는 사람</span>입니다. 그리고 책임을 지기 위해서는 내 손을 거쳐 나가는 것이 무엇인지 완벽하게 이해해야
+                        합니다. 이것이 우리가 여전히 프로그래밍 언어를 깊게 배워야 하는 이유입니다.</p>
+                </div>
+            </section>
+
+            <!-- 7. 레퍼런스 -->
+            <section data-background-color="#000000">
+                <h2>References</h2>
+                <div style="font-size: 24px !important; color: #888;">
+                    <p>• GeekNews: 왜 프로그래밍 언어를 배우는 것은 가치가 있는가 (https://news.hada.io/topic?id=30818)</p>
+                    <p>• 원문: Why learning a programming language is worth it (v0.dev/blog/...)</p>
+                    <p>• HCHV 교육 모듈 v4.3.1 | Senior IT Mentorship</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            center: true,
+            hash: true,
+            width: 1200,
+            height: 800,
+            transition: 'convex',
+            slideNumber: 'c/t'
+        });
+    </script>
+</body>
+
+</html>

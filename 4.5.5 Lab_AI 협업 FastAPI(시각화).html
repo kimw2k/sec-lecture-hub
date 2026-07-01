@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>AI 협업 FastAPI & 데이터 시각화 실습</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #059669; /* FastAPI Green */
+            --secondary: #3b82f6; /* Logic Blue */
+            --accent: #f43f5e; /* Alert Red */
+            --bg-light: #f8fafc;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            /* 코드 영역 가독성 개선 변수 */
+            --code-bg: #1e1e1e; /* VS Code Dark Style */
+            --code-comment: #6a9955;
+            --code-keyword: #569cd6;
+            --code-string: #ce9178;
+            --code-func: #dcdcaa;
+        }
+
+        @page { size: A4; margin: 15mm; }
+        html, body { margin: 0; padding: 0; font-family: "Noto Sans KR", sans-serif; background: #fff; color: var(--text-main); line-height: 1.6; }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px; }
+        
+        /* 헤더 */
+        .header { border-bottom: 4px solid var(--primary); padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .header-title h1 { font-size: 24px; font-weight: 900; color: var(--primary); margin: 0; }
+        .theme-tag { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; vertical-align: middle; }
+
+        /* 섹션 */
+        section { margin-bottom: 30px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .section-header { background: var(--bg-light); padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+        .section-header .icon { width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-weight: 900; }
+        .section-content { padding: 20px; }
+
+        /* 가독성 1순위: 개선된 코드 블록 */
+        .code-block { background: var(--code-bg); color: #d4d4d4; padding: 20px; border-radius: 8px; overflow: auto; font-family: 'Fira Code', 'Consolas', monospace; font-size: 13.5px; line-height: 1.6; margin: 10px 0; border: 1px solid #333; }
+        .code-block .comment { color: var(--code-comment); }
+        .code-block .keyword { color: var(--code-keyword); font-weight: bold; }
+        .code-block .string { color: var(--code-string); }
+        .code-block .func { color: var(--code-func); }
+        .code-block .cmd-prefix { color: #858585; user-select: none; }
+
+        /* 프롬프트 박스 */
+        .prompt-box { background: #f0f9ff; border: 1px solid #bae6fd; padding: 18px; border-radius: 8px; margin: 15px 0; border-left: 6px solid var(--secondary); }
+        .prompt-label { font-size: 13px; font-weight: 800; color: var(--secondary); margin-bottom: 10px; display: flex; align-items: center; }
+        
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; color: white; margin-right: 5px; }
+        .badge-ai { background: #7c3aed; }
+        .badge-human { background: #059669; }
+
+        .steps { padding-left: 20px; }
+        .steps li { margin-bottom: 8px; font-weight: 500; }
+
+        @media print {
+            .code-block { background: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; }
+            .section { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="header-title">
+            <span class="theme-tag">API & DATA VISUALIZATION</span>
+            <h1>AI 협업: FastAPI 구축 및 공공 데이터 시각화</h1>
+        </div>
+        <div style="text-align:right; font-size:12px; color:#64748b;">
+            교과과정: K-Move School DevNet 1.0 - 백엔드 개발 및 데이터 분석<br/>
+            필수도구: Python 3.10+, FastAPI, Pandas, Matplotlib
+        </div>
+    </header>
+
+    <!-- Phase 1 -->
+    <section>
+        <div class="section-header">
+            <div class="icon">01</div>
+            <strong>환경 구성: 가상환경 및 의존성 설치</strong>
+        </div>
+        <div class="section-content">
+            <p>프로젝트 독립성을 위해 파이썬 가상환경을 생성하고 필요한 라이브러리를 설치합니다.</p>
+            <div class="code-block">
+                <span class="cmd-prefix">$</span> <span class="keyword">python</span> -m venv venv<br/>
+                <span class="cmd-prefix">$</span> <span class="keyword">source</span> venv/bin/activate <span class="comment"># Windows: venv\Scripts\activate</span><br/>
+                <span class="cmd-prefix">$</span> <span class="keyword">pip install</span> fastapi uvicorn requests pandas matplotlib
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 2 -->
+    <section>
+        <div class="section-header">
+            <div class="icon" style="background:var(--secondary)">02</div>
+            <strong>FastAPI 초기 설정 및 헬스 체크</strong>
+        </div>
+        <div class="section-content">
+            <p>가장 기본적인 API 서버를 구동하여 환경이 정상적인지 확인합니다.</p>
+            <div class="code-block">
+                <span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI<br/><br/>
+                app = <span class="func">FastAPI</span>()<br/><br/>
+                <span class="keyword">@app.get</span>(<span class="string">"/"</span>)<br/>
+                <span class="keyword">def</span> <span class="func">read_root</span>():<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> {<span class="string">"message"</span>: <span class="string">"FastAPI 서버 정상 작동 중"</span>}
+            </div>
+            <p><strong>서버 실행 명령:</strong></p>
+            <div class="code-block">
+                <span class="cmd-prefix">$</span> uvicorn main:app --reload
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 3 -->
+    <section>
+        <div class="section-header" style="border-left: 5px solid var(--accent);">
+            <div class="icon" style="background:var(--accent)">03</div>
+            <strong>Swagger UI를 통한 인터페이스 테스트</strong>
+        </div>
+        <div class="section-content">
+            <p>FastAPI가 자동 생성하는 대화형 문서(Swagger)를 활용하여 API를 검증합니다.</p>
+            <ul class="steps">
+                <li>브라우저에서 <code>http://127.0.0.1:8000/docs</code> 접속</li>
+                <li><strong>GET /</strong> 항목 클릭 → <strong>[Try it out]</strong> 버튼 클릭</li>
+                <li><strong>[Execute]</strong> 클릭 후 <strong>Response Body</strong>에서 결과값 확인</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Phase 4 -->
+    <section>
+        <div class="section-header" style="border-left: 5px solid #7c3aed;">
+            <div class="icon" style="background:#7c3aed">04</div>
+            <strong>응용: 기상청 데이터 연동 및 시각화</strong>
+        </div>
+        <div class="section-content">
+            <p>한국 기상청 단기예보 API를 호출하고, 데이터를 정제하여 그래프로 표시합니다.</p>
+            
+            <div class="prompt-box">
+                <span class="prompt-label">🤖 AI 프롬프트 추천 (데이터 요청 및 처리)</span>
+                "공공데이터포털 기상청_단기예보 조회서비스 API를 Python requests로 호출하는 코드를 작성해줘. 
+                1. 결과(JSON)에서 'T1H(기온)' 항목만 추출해.<br/>
+                2. Pandas를 사용해 시간별 기온 데이터프레임을 만들어.<br/>
+                3. Matplotlib을 이용해 x축은 시간, y축은 기온인 선 그래프(Line Chart)를 그리는 함수를 작성해줘.<br/>
+                4. 한글 폰트 깨짐 방지 코드도 포함해줘."
+            </div>
+
+            <p><strong>필수 구현 요건:</strong></p>
+            <div class="code-block">
+                <span class="comment"># AI 작성 코드 검토 포인트</span><br/>
+                1. <span class="keyword">Service Key</span>: API 오픈 키 보안 관리 여부<br/>
+                2. <span class="keyword">Base Date/Time</span>: 현재 시점 기준 동적 생성 여부<br/>
+                3. <span class="keyword">Error Handling</span>: API 응답 실패 시 예외 처리
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 5 -->
+    <section>
+        <div class="section-header">
+            <div class="icon" style="background:#475569">05</div>
+            <strong>실습 과제 및 제출 안내</strong>
+        </div>
+        <div class="section-content">
+            <table style="width:100%; border-collapse: collapse; font-size:13px;">
+                <tr style="background:#f1f5f9;">
+                    <th style="border:1px solid var(--border); padding:10px;">과제 항목</th>
+                    <th style="border:1px solid var(--border); padding:10px;">평가 기준</th>
+                </tr>
+                <tr>
+                    <td style="border:1px solid var(--border); padding:10px;">Swagger 테스트 캡처</td>
+                    <td style="border:1px solid var(--border); padding:10px;">응답 코드 200 OK 확인 여부</td>
+                </tr>
+                <tr>
+                    <td style="border:1px solid var(--border); padding:10px;">기상 데이터 시각화 결과</td>
+                    <td style="border:1px solid var(--border); padding:10px;">그래프의 가독성 및 데이터 정확성</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <footer style="text-align:center; font-size:11px; color:#94a3b8; margin-top:30px;">
+        본 매뉴얼은 실무 활용 능력 배양을 위해 AI 도구의 적극적 사용을 권장합니다.<br/>
+        <b>인쇄 팁:</b> 브라우저 설정에서 색상 보존을 위해 '배경 그래픽'을 반드시 활성화하세요.
+    </footer>
+</div>
+
+</body>
+</html>

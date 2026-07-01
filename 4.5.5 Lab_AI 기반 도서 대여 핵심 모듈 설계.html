@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AI 협업 프로그래밍 교육 매뉴얼</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --success: #059669;
+            --warning: #d97706;
+            --bg-light: #f8fafc;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            /* 코드 테마 개선 */
+            --code-bg: #1e1e1e;
+            --code-key: #569cd6;
+            --code-func: #dcdcaa;
+            --code-str: #ce9178;
+            --code-cmt: #6a9955;
+            --code-txt: #d4d4d4;
+        }
+
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Noto Sans KR", sans-serif;
+            background: #fff;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .theme-tag {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+
+        .phase-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .phase-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .phase-card.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #eff6ff;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        section {
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            background: var(--bg-light);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header .icon {
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: 900;
+        }
+
+        .section-content {
+            padding: 20px;
+        }
+
+        /* 요구사양 테이블 개선 */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 13.5px;
+        }
+
+        .spec-table th {
+            background: #f1f5f9;
+            color: var(--text-main);
+            font-weight: 700;
+            text-align: left;
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .spec-table td {
+            padding: 12px;
+            border: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .spec-table tr:nth-child(even) {
+            background: #fdfdfe;
+        }
+
+        .type-tag {
+            font-family: 'Fira Code', monospace;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        /* 개선된 코드 블록 */
+        .code-box {
+            background: var(--code-bg);
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .code-info {
+            background: #333;
+            color: #aaa;
+            padding: 5px 15px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+            color: var(--code-txt);
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .key {
+            color: var(--code-key);
+            font-weight: 600;
+        }
+
+        .func {
+            color: var(--code-func);
+        }
+
+        .str {
+            color: var(--code-str);
+        }
+
+        .cmt {
+            color: var(--code-cmt);
+            font-style: italic;
+        }
+
+        .prompt-box {
+            background: #eff6ff;
+            border-left: 6px solid var(--primary);
+            padding: 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .prompt-label {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-right: 5px;
+            color: white;
+            vertical-align: middle;
+        }
+
+        .badge-ai {
+            background: var(--secondary);
+        }
+
+        .badge-human {
+            background: var(--success);
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                /* Legacy */
+            }
+
+            .code-window {
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header class="header">
+            <div class="header-title">
+                <span class="theme-tag">실무 시뮬레이션</span>
+                <h1>AI 기반 도서 대여 핵심 모듈 설계 및 실습</h1>
+            </div>
+            <div style="text-align:right; font-size:12px; color:#64748b;">
+                교과목: K-Move School DevNet 1.0<br />
+                도구: Claude/GPT + Python + Pytest
+            </div>
+        </header>
+
+        <div class="phase-container">
+            <div class="phase-card active">1. 요구사항 분석</div>
+            <div class="phase-card active">2. AI 협업 설계</div>
+            <div class="phase-card active">3. TDD 기반 구현</div>
+            <div class="phase-card">4. 디버깅/최적화</div>
+            <div class="phase-card">5. 배포/회고</div>
+        </div>
+
+        <!-- Phase 1 -->
+        <section>
+            <div class="section-header">
+                <div class="icon">01</div>
+                <strong>비즈니스 요구사항 (Business Requirement)</strong>
+            </div>
+            <div class="section-content">
+                <p><strong>시나리오:</strong> 안정적인 도서 관리를 위한 핵심 대여 필터링 로직 구현</p>
+                <ul style="padding-left: 20px;">
+                    <li><strong>한도 관리:</strong> 일반(3권), 프리미엄(5권) 등급에 따른 최대 대여량 제한</li>
+                    <li><strong>패널티:</strong> 연체(Overdue) 도서가 1권이라도 있을 경우 신규 대여 즉시 차단</li>
+                    <li><strong>비용 계산:</strong> 반납 시 연체 기간 당 500원의 미납금 자동 합산</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Phase 2 -->
+        <section>
+            <div class="section-header" style="border-left: 5px solid var(--secondary);">
+                <div class="icon" style="background:var(--secondary)">02</div>
+                <strong>상세 클래스 설계 사양 (Class Specification)</strong>
+            </div>
+            <div class="section-content">
+                <p>AI에게 전달할 고정밀 설계 테이블입니다. 각 속성 및 반환 타입을 준수하세요.</p>
+                <table class="spec-table">
+                    <thead>
+                        <tr>
+                            <th width="20%">클래스</th>
+                            <th width="40%">속성 (Attributes)</th>
+                            <th width="40%">핵심 메서드 (Methods)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Member</strong></td>
+                            <td>
+                                • <span class="type-tag">grade</span>: "Regular" | "Premium"<br>
+                                • <span class="type-tag">rented_books</span>: List[Book]<br>
+                                • <span class="type-tag">overdue_days</span>: int
+                            </td>
+                            <td>
+                                • <span class="type-tag">can_borrow() -> bool</span><br>
+                                : 연체 여부 및 수량 체크 후 대여 가능 여부 반환
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>LibraryService</strong></td>
+                            <td>
+                                • <span class="type-tag">inventory</span>: Dict[str, Book]
+                            </td>
+                            <td>
+                                • <span class="type-tag">process_rental(m, b) -> Result</span><br>
+                                : 비즈니스 로직(한도, 연체) 검증 후 대여 처리
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="prompt-box">
+                    <span class="prompt-label">🤖 AI 가이드: 클래스 구조 생성 프롬프트</span>
+                    "첨부된 요구사양 테이블을 바탕으로 Python 클래스 뼈대를 작성해줘. <strong>Member</strong> 클래스는 등급별 <code>max_limit</code>
+                    프로퍼티를 가져야 하고, <strong>LibraryService</strong>는 대여 실패 시 다양한 에러 메시지를 반환하도록 추상화해줘."
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 3 -->
+        <section>
+            <div class="section-header" style="border-left: 5px solid var(--success);">
+                <div class="icon" style="background:var(--success)">03</div>
+                <strong>로직 구현 (Logic Implementation)</strong>
+            </div>
+            <div class="section-content">
+                <span class="badge badge-human">Step 1</span> 테스트 명세 수립 &nbsp;
+                <span class="badge badge-ai">Step 2</span> AI 로직 생성
+
+                <div class="code-box">
+                    <div class="code-info"><span>library_service.py</span><span>Python 3.10+</span></div>
+                    <pre><span class="key">class</span> <span class="func">LibraryService</span>:
+    <span class="key">def</span> <span class="func">process_rental</span>(self, member: Member, book: Book):
+        <span class="cmt"># 1. 연체 여부 확인 (Overdue Check)</span>
+        <span class="key">if</span> member.overdue_days > <span class="num">0</span>:
+            <span class="key">return</span> {<span class="str">"status"</span>: <span class="str">"FAILED"</span>, <span class="str">"reason"</span>: <span class="str">"OVERDUE"</span>}
+
+        <span class="cmt"># 2. 등급별 대여 한도 도달 확인</span>
+        max_limit = <span class="num">5</span> <span class="key">if</span> member.grade == <span class="str">"Premium"</span> <span class="key">else</span> <span class="num">3</span>
+        <span class="key">if</span> <span class="func">len</span>(member.rented_books) >= max_limit:
+            <span class="key">return</span> {<span class="str">"status"</span>: <span class="str">"FAILED"</span>, <span class="str">"reason"</span>: <span class="str">"LIMIT_EXCEEDED"</span>}
+
+        <span class="cmt"># 3. 대여 처리</span>
+        member.rented_books.<span class="func">append</span>(book)
+        <span class="key">return</span> {<span class="str">"status"</span>: <span class="str">"SUCCESS"</span>}</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 4 -->
+        <section>
+            <div class="section-header" style="border-left: 5px solid var(--warning);">
+                <div class="icon" style="background:var(--warning)">04</div>
+                <strong>검증 및 실습 과제</strong>
+            </div>
+            <div class="section-content">
+                <p>작성된 모듈이 완벽한지 AI와 함께 디버깅 프로젝트를 수행합니다.</p>
+                <div class="prompt-box"
+                    style="background: #fffbeb; border-color: #fde68a; border-left-color: var(--warning);">
+                    <span class="prompt-label" style="color:var(--warning)">🛡️ AI 보안/성능 리뷰 프롬프트</span>
+                    "위의 <code>process_rental</code> 코드에서 동일한 책을 동시에 여러 명이 대여하려 할 때 발생할 수 있는 <strong>'Race
+                        Condition'</strong>이나 <strong>'중복 대여'</strong> 문제를 방지하기 위한 예외 처리 코드를 보완해줘."
+                </div>
+            </div>
+        </section>
+
+        <footer
+            style="text-align:center; font-size:12px; color:#94a3b8; margin-top:30px; border-top: 1px dashed #e2e8f0; padding-top: 15px;">
+            본 템플릿은 AI를 단순한 코드 생성기가 아닌 '설계 협업 파트너'로 활용하는 워크플로우를 제공합니다.<br />
+            <b>인쇄 안내:</b> [Ctrl+P] → 설정 → 배경 그래픽 [켬]
+        </footer>
+    </div>
+
+</body>
+
+</html>
