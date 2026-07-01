@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- PWA & Favicon -->
+    <title>Smart Hub Pro</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#020617">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3429/3429433.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3429/3429433.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@600;900&display=swap');
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card:active {
+            transform: scale(0.96);
+        }
+
+        /* 카테고리 색상 매핑 */
+        .cat-강의 {
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Blue */
+        .cat-실습 {
+            border-left: 4px solid #10b981;
+        }
+
+        /* Green */
+        .cat-특강 {
+            border-left: 4px solid #f59e0b;
+        }
+
+        /* Orange */
+        .cat-세미나 {
+            border-left: 4px solid #8b5cf6;
+        }
+
+        /* Purple */
+        .cat-기타 {
+            border-left: 4px solid #64748b;
+        }
+
+        /* Slate */
+
+        .admin-only {
+            display: none;
+        }
+
+        .is-admin .admin-only {
+            display: block;
+        }
+
+        .is-admin .admin-inline {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="pb-24">
+
+    <!-- 상단 헤더 -->
+    <header class="sticky top-0 z-50 glass px-4 py-4 mb-6">
+        <div class="max-w-2xl mx-auto flex flex-col gap-4">
+            <div class="flex justify-between items-center">
+                <h1 id="classroomName" contenteditable="false" class="text-xl font-black text-white outline-none">나의 스마트
+                    강의실</h1>
+                <button id="adminBtn" onclick="toggleAdmin()"
+                    class="text-[10px] font-black tracking-widest px-3 py-1 rounded-full border border-slate-700 text-slate-500 uppercase">
+                    Admin Login
+                </button>
+            </div>
+
+            <!-- 통합 검색 및 카테고리 필터 -->
+            <div class="flex flex-col gap-2">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-slate-500"></i>
+                    <input type="search" id="searchInput" placeholder="강의명 또는 소제목 검색..."
+                        class="w-full bg-slate-900/50 border border-slate-700/50 rounded-2xl py-3 pl-12 pr-4 text-sm outline-none focus:ring-2 ring-cyan-500/50 transition-all">
+                </div>
+                <div id="filterBar" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth">
+                    <button onclick="filterCat('전체')"
+                        class="filter-btn active px-4 py-1.5 rounded-full text-[11px] font-black whitespace-nowrap bg-cyan-600 text-white">전체</button>
+                    <button onclick="filterCat('강의')"
+                        class="filter-btn px-4 py-1.5 rounded-full text-[11px] font-black whitespace-nowrap bg-slate-800 text-slate-400">강의</button>
+                    <button onclick="filterCat('실습')"
+                        class="filter-btn px-4 py-1.5 rounded-full text-[11px] font-black whitespace-nowrap bg-slate-800 text-slate-400">실습</button>
+                    <button onclick="filterCat('특강')"
+                        class="filter-btn px-4 py-1.5 rounded-full text-[11px] font-black whitespace-nowrap bg-slate-800 text-slate-400">특강</button>
+                    <button onclick="filterCat('세미나')"
+                        class="filter-btn px-4 py-1.5 rounded-full text-[11px] font-black whitespace-nowrap bg-slate-800 text-slate-400">세미나</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4">
+        <!-- 관리자 전용 업로드 섹션 -->
+        <div class="admin-only mb-8">
+            <div
+                class="relative w-full h-32 bg-slate-900 border-2 border-dashed border-cyan-900 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden active:bg-slate-800 transition-colors">
+                <input type="file" id="fileInput" multiple accept=".html,.md"
+                    class="absolute inset-0 opacity-0 z-20 cursor-pointer">
+                <i class="fas fa-plus-circle text-2xl text-cyan-500 mb-2"></i>
+                <span class="text-xs font-black text-cyan-600 uppercase tracking-tighter">새로운 강의 파일 등록</span>
+            </div>
+        </div>
+
+        <!-- 리스트 영역 -->
+        <div id="lectureContainer" class="space-y-3"></div>
+    </main>
+
+    <!-- 상세 설정 모달 (카테고리 선택 포함) -->
+    <div id="detailModal"
+        class="fixed inset-0 bg-black/90 z-[100] hidden flex items-end sm:items-center justify-center">
+        <div
+            class="bg-slate-900 w-full max-w-lg rounded-t-[2.5rem] sm:rounded-3xl p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-start mb-6">
+                <h2 id="modalTitle" class="text-xl font-black text-white truncate w-3/4">파일설정</h2>
+                <button onclick="closeModal()" class="text-slate-500 text-4xl leading-none">&times;</button>
+            </div>
+
+            <div class="space-y-5">
+                <!-- 카테고리 선택 (관리자 전용) -->
+                <div class="admin-only">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2 px-1">카테고리
+                        선택</label>
+                    <select id="lectureCategory"
+                        class="w-full bg-slate-800 border-none rounded-xl p-4 text-white outline-none ring-1 ring-slate-700 focus:ring-2 focus:ring-cyan-500">
+                        <option value="강의">강의 (Blue)</option>
+                        <option value="실습">실습 (Green)</option>
+                        <option value="특강">특강 (Orange)</option>
+                        <option value="세미나">세미나 (Purple)</option>
+                        <option value="기타">기타 (Slate)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label
+                        class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2 px-1">소제목</label>
+                    <input type="text" id="lectureSubtitle"
+                        class="w-full bg-slate-800 border-none rounded-xl p-4 text-white outline-none ring-1 ring-slate-700">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2 px-1">학습 핵심
+                        요약</label>
+                    <textarea id="lectureSummary" rows="4"
+                        class="w-full bg-slate-800 border-none rounded-xl p-4 text-white outline-none ring-1 ring-slate-700 resize-none"></textarea>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button id="openBtn"
+                        class="flex-1 bg-white text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2">열기</button>
+                    <button id="saveBtn"
+                        class="admin-only bg-cyan-600 text-white font-black py-4 px-8 rounded-2xl">저장</button>
+                </div>
+                <button id="delBtn"
+                    class="admin-only w-full text-red-500/50 text-[10px] font-black py-2 uppercase tracking-tighter">강의
+                    삭제하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 관리자 비번 해시값 (비번: 1234 의 SHA-256 예시값)
+        // 실제 운영 시 본인만의 해시값으로 교체 가능 
+        // const ADMIN_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+        const ADMIN_HASH = "a1fcb2635e61aa9ee93488525a45f62f51405c8744d39def30afeeda3cfbc61e";
+        const KEY = 'EDU_PRO_V10';
+
+        let lectures = JSON.parse(localStorage.getItem(KEY)) || [];
+        let currentFilter = '전체';
+        let isAdmin = false;
+
+        // 1. 보안 인증 로직 (해싱 처리)
+        async function hashPassword(pw) {
+            const msgUint8 = new TextEncoder().encode(pw);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function toggleAdmin() {
+            if (!isAdmin) {
+                const pw = prompt("관리자 비밀번호를 입력하세요 (초기: ****)");
+                const inputHash = await hashPassword(pw);
+                if (inputHash === ADMIN_HASH) {
+                    isAdmin = true;
+                    document.body.classList.add('is-admin');
+                    document.getElementById('classroomName').contentEditable = true;
+                    document.getElementById('adminBtn').innerText = "Admin On";
+                    alert("관리자 인증 성공");
+                } else {
+                    alert("비밀번호가 틀립니다.");
+                }
+            } else {
+                isAdmin = false;
+                document.body.classList.remove('is-admin');
+                document.getElementById('classroomName').contentEditable = false;
+                document.getElementById('adminBtn').innerText = "Admin Login";
+            }
+        }
+
+        // 2. 파일 서빙 및 데이터 처리
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (!files.length) return;
+
+            Array.from(files).forEach(f => {
+                const ext = f.name.split('.').pop().toLowerCase();
+                if (['html', 'md', 'pptx', 'hwpx'].includes(ext)) {
+                    lectures.push({
+                        id: 'ID' + Date.now() + Math.random().toString(36).substr(2, 4),
+                        fileName: f.name,
+                        subtitle: '',
+                        summary: '',
+                        category: '강의',
+                        ext: ext,
+                        date: new Date().toLocaleDateString()
+                    });
+                }
+            });
+            saveData();
+            render();
+        });
+
+        function filterCat(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-600', 'text-white', 'active');
+                btn.classList.add('bg-slate-800', 'text-slate-400');
+                if (btn.innerText === cat) {
+                    btn.classList.add('bg-cyan-600', 'text-white', 'active');
+                }
+            });
+            render();
+        }
+
+        function render() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = lectures.slice().reverse().filter(l => {
+                const matchSearch = l.fileName.toLowerCase().includes(query) || l.subtitle.toLowerCase().includes(query);
+                const matchCat = (currentFilter === '전체') || (l.category === currentFilter);
+                return matchSearch && matchCat;
+            });
+
+            const container = document.getElementById('lectureContainer');
+            if (!filtered.length) {
+                container.innerHTML = `<div class="py-20 text-center text-slate-700 text-xs font-black uppercase tracking-widest">데이터가 없습니다</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(l => `
+                <div class="card cat-${l.category} bg-[#0f172a] p-5 rounded-2xl flex flex-col gap-1 cursor-pointer" onclick="openDetail('${l.id}')">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[9px] font-black px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 uppercase tracking-tighter">${l.ext} | ${l.category}</span>
+                        <span class="text-slate-600 text-[9px] font-bold">${l.date}</span>
+                    </div>
+                    <h3 class="text-white font-bold truncate">${l.fileName}</h3>
+                    <p class="text-cyan-600 text-[11px] font-bold truncate">${l.subtitle || '요약 편집 필요'}</p>
+                </div>
+            `).join('');
+        }
+
+        function openDetail(id) {
+            const item = lectures.find(l => l.id === id);
+            document.getElementById('modalTitle').innerText = item.fileName;
+            document.getElementById('lectureSubtitle').value = item.subtitle;
+            document.getElementById('lectureSummary').value = item.summary;
+            document.getElementById('lectureCategory').value = item.category || '강의';
+
+            document.getElementById('saveBtn').onclick = () => {
+                if (!isAdmin) return alert("관리자 권한이 필요합니다.");
+                item.subtitle = document.getElementById('lectureSubtitle').value;
+                item.summary = document.getElementById('lectureSummary').value;
+                item.category = document.getElementById('lectureCategory').value;
+                saveData(); render(); closeModal();
+            };
+
+            document.getElementById('openBtn').onclick = () => {
+                window.location.href = item.fileName;
+            };
+
+            document.getElementById('delBtn').onclick = () => {
+                if (!isAdmin) return;
+                if (confirm('이 카드를 완전히 삭제합니까?')) {
+                    lectures = lectures.filter(l => l.id !== id);
+                    saveData(); render(); closeModal();
+                }
+            };
+
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() { document.getElementById('detailModal').classList.add('hidden'); }
+        function saveData() {
+            localStorage.setItem(KEY, JSON.stringify(lectures));
+            localStorage.setItem(KEY + '_T', document.getElementById('classroomName').innerText);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', render);
+        document.getElementById('classroomName').addEventListener('blur', () => { if (isAdmin) saveData(); });
+        document.getElementById('classroomName').innerText = localStorage.getItem(KEY + '_T') || '나의 스마트 강의실';
+
+        render();
+    </script>
+</body>
+
+</html>
